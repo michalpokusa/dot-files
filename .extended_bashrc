@@ -1,0 +1,18 @@
+# Change directory aliases
+alias home='cd ~'
+alias cd..='cd ..'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+
+# Convinience aliases
+alias public-ip='curl https://ifconfig.me/ip; echo'
+alias ports='netstat -tulanp'
+alias total-size='du --human-readable --summarize --total'
+
+# Allow executing scripts from home and current directory
+export PATH=$PATH:~:.
+
+# Preprent with date and time
+export PS1="[\\033[38;5;239m\$(date +%Y-%m-%d\\ %H:%M:%S)\\033[0m] $PS1"
