@@ -6,6 +6,18 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 
+# Docker aliases
+alias dp='docker ps --all'
+alias de='docker exec -it'
+alias dl='docker logs --timestamps --since 1h --follow'
+alias dcu='docker compose --file docker-compose.yml up'
+alias dcud='docker compose --file docker-compose.yml up -d'
+alias dcd='docker compose --file docker-compose.yml down'
+alias dcr='docker compose --file docker-compose.yml restart'
+alias dcp='docker compose --file docker-compose.yml pull'
+alias dcl='docker compose --file docker-compose.yml logs'
+alias dsp='docker system prune --all --force --volumes'
+
 # Convinience aliases
 alias public-ip='curl https://ifconfig.me/ip; echo'
 alias ports='netstat -tulanp'
