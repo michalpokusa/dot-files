@@ -28,3 +28,14 @@ export PATH=$PATH:~:.
 
 # Preprent with date and time
 export PS1="[\\033[38;5;239m\$(date +%Y-%m-%d\\ %H:%M:%S)\\033[0m] $PS1"
+
+
+dot-files-update-function() {
+    EXTENDED_BASHRC_PATH="$HOME/.extended_bashrc"
+    DOTFILES_REPOSITRY_URL="https://raw.githubusercontent.com/michalpokusa/dot-files/main"
+
+    curl --silent "$DOTFILES_REPOSITRY_URL/.tmux.conf" > $HOME/.tmux.conf
+    curl --silent "$DOTFILES_REPOSITRY_URL/.vimrc" > $HOME/.vimrc
+    curl --silent "$DOTFILES_REPOSITRY_URL/.extended_bashrc" > $HOME/.extended_bashrc
+}
+alias dot-files-update='dot-files-update-function "$@"'
