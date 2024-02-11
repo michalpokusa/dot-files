@@ -102,6 +102,11 @@ set history=1000
     vnoremap <silent> <C-S>         <C-C>:update<CR>
     inoremap <silent> <C-S>         <C-O>:update<CR>
 
+    " Ctrl+x to quit
+    nnoremap <silent> <C-x> :quit<CR>
+    vnoremap <silent> <C-x> <C-C>:quit<CR>
+    inoremap <silent> <C-x> <C-O>:quit<CR>
+
     " Ctrl+l to clear highlights
     nnoremap <silent> <C-l> :nohl<CR>
 
