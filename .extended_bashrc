@@ -31,7 +31,6 @@ export PS1="[\\033[38;5;239m\$(date +%Y-%m-%d\\ %H:%M:%S)\\033[0m] $PS1"
 
 
 dot-files-update-function() {
-    EXTENDED_BASHRC_PATH="$HOME/.extended_bashrc"
     DOTFILES_REPOSITRY_URL="https://raw.githubusercontent.com/michalpokusa/dot-files/main"
 
     curl --silent "$DOTFILES_REPOSITRY_URL/.tmux.conf" > $HOME/.tmux.conf
