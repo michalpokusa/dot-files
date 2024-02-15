@@ -1,3 +1,6 @@
+# Sudo preservs environment variables
+alias sudo='sudo -E'
+
 # Change directory aliases
 alias home='cd ~'
 alias cd..='cd ..'
@@ -26,6 +29,9 @@ alias total-size='du --human-readable --summarize --total'
 
 # Allow executing scripts from home and current directory
 export PATH=$PATH:~:.
+
+# Set default editor
+export EDITOR=vim
 
 # Preprent with date and time
 export PS1="[\\033[38;5;239m\$(date +%Y-%m-%d\\ %H:%M:%S)\\033[0m] $PS1"

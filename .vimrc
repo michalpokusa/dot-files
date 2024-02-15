@@ -6,8 +6,12 @@ set nocompatible
 filetype on
 syntax on
 
-" Line numbers
+" Relative line numbers and line number on current line
 set number
+set relativenumber
+
+" Enable mouse for all modes
+set mouse=a
 
 " Do not jump to matching bracket when inserting matching one
 set noshowmatch
@@ -15,7 +19,7 @@ set noshowmatch
 " Wrap long lines
 set wrap
 
-" Keep cursor at least 10 lines away from screen end if possible
+" Keep cursor at least 10 lines away from borders end if possible
 set scrolloff=10
 
 " Show confirmation when closing unsaved files
@@ -108,13 +112,7 @@ set history=1000
     inoremap <silent> <C-x> <C-O>:quit<CR>
 
     " Ctrl+l to clear highlights
-    nnoremap <silent> <C-l> :nohl<CR>
-
-    " Fix for Ctrl+arrow keys in tmux
-    execute "silent! set <xUp>=\<Esc>[@;*A"
-    execute "silent! set <xDown>=\<Esc>[@;*B"
-    execute "silent! set <xRight>=\<Esc>[@;*C"
-    execute "silent! set <xLeft>=\<Esc>[@;*D"
+    nnoremap <silent> <C-l> :nohlsearch<CR>
 
     " Up/Down move visual lines instead of logical lines
     nnoremap <Up> gk
@@ -128,9 +126,33 @@ set history=1000
     nnoremap rr :source $MYVIMRC<CR>
 
     " F2/F3 to change buffer to previous/next, F4 to open select menu
-    map <F2> :bprev<CR>
+    map <F2> :bprevious<CR>
     map <F3> :bnext<CR>
     map <F4> :call feedkeys(':buffer<space><tab>','t')<cr>
+
+    function! ToggleLineNumbering()
+        " Only absolute line numbering
+        if !&number && !&relativenumber
+            set number
+
+        " Only relative line numbering
+        elseif &number && !&relativenumber
+            set nonumber relativenumber
+
+        " Both absolute and relative line numbering
+        elseif !&number && &relativenumber
+            set number
+
+        " No line numbering
+        else
+            set norelativenumber nonumber
+        endif
+    endfunction
+
+    " Map Ctrl+n to the toggle relative line numbering function
+    nnoremap <silent> <C-n> :call ToggleLineNumbering()<CR>
+    vnoremap <silent> <C-n> <C-C>:call ToggleLineNumbering()<CR>
+    inoremap <silent> <C-n> <C-O>:call ToggleLineNumbering()<CR>
 
     function! ToggleCursorHighlight()
         " Use the & operator to check if cursorline and cursorcolumn are enabled
@@ -143,9 +165,27 @@ set history=1000
         endif
     endfunction
 
-    " Map F5 to the toggle function
-    nnoremap <F5> :call ToggleCursorHighlight()<CR>
+    " Map Ctrl+h to the toggle cursor highlight
+    nnoremap <silent> <C-h> :call ToggleCursorHighlight()<CR>
+    vnoremap <silent> <C-h> <C-C>:call ToggleCursorHighlight()<CR>
+    inoremap <silent> <C-h> <C-O>:call ToggleCursorHighlight()<CR>
 
+" Fixes
+
+    " Fix for Ctrl+arrow keys in tmux
+    execute "silent! set <xUp>=\<Esc>[@;*A"
+    execute "silent! set <xDown>=\<Esc>[@;*B"
+    execute "silent! set <xRight>=\<Esc>[@;*C"
+    execute "silent! set <xLeft>=\<Esc>[@;*D"
+
+    " Fix for tmux and vim mouse support
+    if exists('$TMUX')
+        let &t_SI = "\<Esc>Ptmux;\<Esc>\e[5 q\<Esc>\\"
+        let &t_EI = "\<Esc>Ptmux;\<Esc>\e[2 q\<Esc>\\"
+    else
+        let &t_SI = "\e[5 q"
+        let &t_EI = "\e[2 q"
+    endif
 
 " Theme
 
