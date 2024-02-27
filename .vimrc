@@ -62,6 +62,11 @@ set history=1000
     " Number of spaces that a <Tab> in the file counts for.
     set tabstop=4
 
+" Complete menu
+
+    " Show the complete menu even if there is only one match
+    set completeopt=menu,preview,noinsert,noselect
+
 " Status line
 
     " Always show status line
@@ -124,11 +129,6 @@ set history=1000
 
     " rr to reload configuration
     nnoremap rr :source $MYVIMRC<CR>
-
-    " F2/F3 to change buffer to previous/next, F4 to open select menu
-    map <F2> :bprevious<CR>
-    map <F3> :bnext<CR>
-    map <F4> :call feedkeys(':buffer<space><tab>','t')<cr>
 
     function! ToggleLineNumbering()
         " Only absolute line numbering
