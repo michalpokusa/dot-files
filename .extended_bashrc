@@ -36,6 +36,21 @@ export EDITOR=vim
 # Preprent with date and time
 export PS1="[\\033[38;5;239m\$(date +%Y-%m-%d\\ %H:%M:%S)\\033[0m] $PS1"
 
+pip-recreate-venv-function() {
+    if [ -d ".venv" ]; then
+    printf "Removing existing .venv\n"
+        rm -rf venv
+    fi
+    printf "Creating new .venv\n"
+    python3 -m venv .venv
+    source .venv/bin/activate
+
+    if [ -f "requirements.txt" ]; then
+        printf "Installing packages from requirements.txt\n"
+        pip install -r requirements.txt
+    fi
+}
+alias pip-recreate-venv='pip-recreate-venv-function "$@"'
 
 dot-files-update-function() {
     DOTFILES_REPOSITRY_URL="https://raw.githubusercontent.com/michalpokusa/dot-files/main"
