@@ -39,7 +39,7 @@ export PS1="[\\033[38;5;239m\$(date +%Y-%m-%d\\ %H:%M:%S)\\033[0m] $PS1"
 pip-recreate-venv-function() {
     if [ -d ".venv" ]; then
     printf "Removing existing .venv\n"
-        rm -rf venv
+        rm -rf .venv
     fi
     printf "Creating new .venv\n"
     python3 -m venv .venv
