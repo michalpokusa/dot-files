@@ -123,12 +123,30 @@ set history=1000
     nnoremap <Up> gk
     nnoremap <Down> gj
 
-    " Ctrl+Down/Up to move down/up 6 lines
-    nnoremap <C-Down> 6<Down>
-    nnoremap <C-Up> 6<Up>
-
     " rr to reload configuration
     nnoremap rr :source $MYVIMRC<CR>
+
+    function! MoveLineDown(count)
+        let i = 0
+        while i < a:count
+            execute ":m .+1"
+            let i += 1
+        endwhile
+    endfunction
+
+    function! MoveLineUp(count)
+        let i = 0
+        while i < a:count
+            execute ":m .-2"
+            let i += 1
+        endwhile
+    endfunction
+
+    " Swap current line with the line above/below
+    nnoremap <expr> md ':<C-U>call MoveLineDown('.v:count1.')<CR>'
+    nnoremap <expr> mu ':<C-U>call MoveLineUp('.v:count1.')<CR>'
+    nnoremap <expr> <C-Down> ':<C-U>call MoveLineDown('.v:count1.')<CR>'
+    nnoremap <expr> <C-Up> ':<C-U>call MoveLineUp('.v:count1.')<CR>'
 
     function! ToggleLineNumbering()
         " Only absolute line numbering
