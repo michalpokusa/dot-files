@@ -36,27 +36,43 @@ export EDITOR=vim
 # Preprent with date and time
 export PS1="[\\033[38;5;239m\$(date +%Y-%m-%d\\ %H:%M:%S)\\033[0m] $PS1"
 
-pip-recreate-venv-function() {
+pip-recreate-venv() {
+    # Remove existing .venv if exists
     if [ -d ".venv" ]; then
     printf "Removing existing .venv\n"
         rm -rf .venv
     fi
+
+    # Create new .venv
     printf "Creating new .venv\n"
     python3 -m venv .venv
     source .venv/bin/activate
 
+    # Install packages from requirements.txt
     if [ -f "requirements.txt" ]; then
         printf "Installing packages from requirements.txt\n"
         pip install -r requirements.txt
     fi
 }
-alias pip-recreate-venv='pip-recreate-venv-function "$@"'
 
-dot-files-update-function() {
-    DOTFILES_REPOSITRY_URL="https://raw.githubusercontent.com/michalpokusa/dot-files/main"
+dot-files-update() {
+    REPOSITRY_URL="https://raw.githubusercontent.com/michalpokusa/dot-files/main"
 
-    curl --silent "$DOTFILES_REPOSITRY_URL/.tmux.conf" > $HOME/.tmux.conf
-    curl --silent "$DOTFILES_REPOSITRY_URL/.vimrc" > $HOME/.vimrc
-    curl --silent "$DOTFILES_REPOSITRY_URL/.extended_bashrc" > $HOME/.extended_bashrc
+    files=(
+        ".tmux.conf"
+        ".vimrc"
+        ".extended_bashrc"
+    )
+
+    for file in "${files[@]}"; do
+        BEFORE_MD5=`cat $HOME/$file | md5sum`
+        curl --silent "$REPOSITRY_URL/$file" > $HOME/$file
+        AFTER_MD5=`cat $HOME/$file | md5sum`
+
+        if [ "${BEFORE_MD5}" != "${AFTER_MD5}" ]; then
+            echo -e "$file has been updated"
+        else
+            echo -e "$file is up to date"
+        fi
+    done
 }
-alias dot-files-update='dot-files-update-function "$@"'
