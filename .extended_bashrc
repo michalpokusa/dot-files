@@ -1,8 +1,12 @@
 # Sudo preservs environment variables
 alias sudo='sudo -E'
 
+# Fixes for default commands behavior
+alias mkdir='mkdir --parents'
+
 # Change directory aliases
 alias home='cd ~'
+alias projects='cd ~/projects'
 alias cd..='cd ..'
 alias ..='cd ..'
 alias ...='cd ../..'

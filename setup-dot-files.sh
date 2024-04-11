@@ -1,9 +1,10 @@
 DOTFILES_REPOSITRY_URL="https://raw.githubusercontent.com/michalpokusa/dot-files/main"
 
 # Download the .tmux.conf, .vimrc and .extended_bashrc files
-curl --silent "$DOTFILES_REPOSITRY_URL/.tmux.conf" > $HOME/.tmux.conf
-curl --silent "$DOTFILES_REPOSITRY_URL/.vimrc" > $HOME/.vimrc
-curl --silent "$DOTFILES_REPOSITRY_URL/.extended_bashrc" > $HOME/.extended_bashrc
+for file in ".tmux.conf" ".vimrc" ".extended_bashrc"; do
+    curl --silent "$DOTFILES_REPOSITRY_URL/$file" > "$HOME/$file"
+    echo "Downloaded $file"
+done
 
 # Add the line to source .extended_bashrc to .bashrc
 BASHRC_PATH="$HOME/.bashrc"
