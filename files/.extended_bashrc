@@ -4,6 +4,11 @@ alias sudo='sudo -E'
 # Fixes for default commands behavior
 alias mkdir='mkdir --parents'
 
+# Create directory and change to it immediately
+mkcd() {
+  mkdir --parents "$@" && cd "$_";
+}
+
 # Change directory aliases
 alias home='cd ~'
 alias projects='cd ~/projects'
@@ -40,7 +45,7 @@ export EDITOR=vim
 # Preprent with date and time
 export PS1="[\\033[38;5;239m\$(date +%Y-%m-%d\\ %H:%M:%S)\\033[0m] $PS1"
 
-pip-recreate-venv() {
+recreate-pip-venv() {
     # Remove existing .venv if exists
     if [ -d ".venv" ]; then
     printf "Removing existing .venv\n"
@@ -68,7 +73,7 @@ test-terminal-8-bit-colors() {
     for colorIndex in {0..255} ; do
         printf "\x1b[0m${colorIndex}: "
 
-        # Plint placeholder using foreground color
+        # Print placeholder using foreground color
         printf "\x1b[38;5;${colorIndex}m${placeholderText}\x1b[0m"
 
         # Print a block of background color
