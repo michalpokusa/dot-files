@@ -59,27 +59,6 @@ pip-recreate-venv() {
     fi
 }
 
-dot-files-update() {
-    REPOSITRY_URL="https://raw.githubusercontent.com/michalpokusa/dot-files/main"
-
-    files=(
-        ".tmux.conf"
-        ".vimrc"
-        ".extended_bashrc"
-    )
-
-    for file in "${files[@]}"; do
-        BEFORE_MD5=`cat $HOME/$file | md5sum`
-        curl --silent "$REPOSITRY_URL/$file" > $HOME/$file
-        AFTER_MD5=`cat $HOME/$file | md5sum`
-
-        if [ "${BEFORE_MD5}" != "${AFTER_MD5}" ]; then
-            echo -e "$file has been updated"
-        else
-            echo -e "$file is up to date"
-        fi
-    done
-}
 
 test-terminal-8-bit-colors() {
     # Read text to use as a placeholder
@@ -95,4 +74,8 @@ test-terminal-8-bit-colors() {
         # Print a block of background color
         printf "\t\t\x1b[48;5;${colorIndex}m                  \x1b[0m\n"
     done
+}
+
+update-dot-files() {
+    curl https://raw.githubusercontent.com/michalpokusa/dot-files/main/update-or-setup-dot-files.sh | bash
 }

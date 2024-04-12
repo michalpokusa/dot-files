@@ -5,5 +5,5 @@ For the first time, copy and paste the following code into the terminal. It will
 Later, dot files can be updated by running `dot-files-update`.
 
 ```bash
-curl https://raw.githubusercontent.com/michalpokusa/dot-files/main/setup-dot-files.sh | bash
+curl https://raw.githubusercontent.com/michalpokusa/dot-files/main/update-or-setup-dot-files.sh | bash
 ```
