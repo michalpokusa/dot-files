@@ -72,7 +72,7 @@ export PS1="[\[\033[38;5;239m\]\$(date +%Y-%m-%d\\ %H:%M:%S)\[\033[0m\]] $PS1"
 
 recreate-pip-venv() {
     # Remove existing .venv if exists
-    if [ -d ".venv" ]; then
+    if [[ -d ".venv" ]]; then
     printf "Removing existing .venv\n"
         rm -rf .venv
     fi
@@ -83,7 +83,7 @@ recreate-pip-venv() {
     source .venv/bin/activate
 
     # Install packages from requirements.txt
-    if [ -f "requirements.txt" ]; then
+    if [[ -f "requirements.txt" ]]; then
         printf "Installing packages from requirements.txt\n"
         pip install -r requirements.txt
     fi
