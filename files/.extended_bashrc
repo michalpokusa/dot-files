@@ -43,7 +43,7 @@ export PATH=$PATH:~:.
 export EDITOR=vim
 
 # Preprent with date and time
-export PS1="[\\033[38;5;239m\$(date +%Y-%m-%d\\ %H:%M:%S)\\033[0m] $PS1"
+export PS1="[\[\033[38;5;239m\]\$(date +%Y-%m-%d\\ %H:%M:%S)\[\033[0m\]] $PS1"
 
 recreate-pip-venv() {
     # Remove existing .venv if exists
