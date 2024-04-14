@@ -49,8 +49,8 @@ vim() {
 
     ABSOLUTE_FILE_PARENT_DIRECTORY=$(realpath $(dirname $FILE_PATH))
 
-    # If file name was provided, try creating its parent directory
-    if [[ -n "$FILE_PATH" ]]; then
+    # If file name was provided, try creating its parent directory if it doesn't exist
+    if [[ -n "$FILE_PATH" && ! -d "$ABSOLUTE_FILE_PARENT_DIRECTORY" ]]; then
 
         UNDERLINE="\033[4m"
         RESET="\033[0m"
