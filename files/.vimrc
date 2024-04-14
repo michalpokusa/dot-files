@@ -77,6 +77,12 @@ set history=1000
     endfunction
 
     function! FileSize(bytes)
+        " If file size is less than 1 KB return the size in bytes
+        if a:bytes < 1024
+            return printf(' %d B ', a:bytes)
+        endif
+
+        " If file size is greater than 1 KB convert it to KB, MB or GB
         let l:bytes = a:bytes | let l:sizes = ['B', 'KB', 'MB', 'GB'] | let l:i = 0
         while l:bytes >= 1024 | let l:bytes = l:bytes / 1024.0 | let l:i += 1 | endwhile
         return l:bytes > 0 ? printf(' %.2f%s ', l:bytes, l:sizes[l:i]) : ''
