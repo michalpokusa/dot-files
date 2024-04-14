@@ -122,6 +122,10 @@ set history=1000
     " Up/Down move visual lines instead of logical lines
     nnoremap <Up> gk
     nnoremap <Down> gj
+    vnoremap <Up> gk
+    vnoremap <Down> gj
+    inoremap <Up> <C-O>gk
+    inoremap <Down> <C-O>gj
 
     " rr to reload configuration
     nnoremap rr :source $MYVIMRC<CR>
