@@ -10,14 +10,14 @@ for FILE in "${FILES[@]}"; do
     FULL_FILE_PATH="$HOME/$FILE"
 
     # File exists, update it
-    if [ -f "$FULL_FILE_PATH" ]; then
+    if [[ -f "$FULL_FILE_PATH" ]]; then
 
         # Compare checksums
         BEFORE_MD5=$(cat $HOME/$FILE | md5sum)
         curl --silent "$REPOSITORY_URL/files/$FILE" > $HOME/$FILE
         AFTER_MD5=$(cat $HOME/$FILE | md5sum)
 
-        if [ "$BEFORE_MD5" != "$AFTER_MD5" ]; then
+        if [[ "$BEFORE_MD5" != "$AFTER_MD5" ]]; then
             echo -e "$FILE has been updated"
         else
             echo -e "$FILE is up to date"
