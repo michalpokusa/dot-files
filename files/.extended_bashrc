@@ -107,5 +107,5 @@ test-terminal-8-bit-colors() {
 }
 
 update-dot-files() {
-    curl https://raw.githubusercontent.com/michalpokusa/dot-files/main/update-or-setup-dot-files.sh | bash
+    curl --silent https://raw.githubusercontent.com/michalpokusa/dot-files/main/update-or-setup-dot-files.sh | bash
 }
