@@ -9,6 +9,17 @@ mkcd() {
   mkdir --parents "$@" && cd "$_";
 }
 
+# Aliases for creating links
+hard-link() {
+    mkdir --parents $(dirname $2)
+    ln --verbose $1 $2
+}
+
+soft-link() {
+    mkdir --parents $(dirname $2)
+    ln --symbolic --verbose --relative $1 $2
+}
+
 # Change directory aliases
 alias home='cd ~'
 alias projects='cd ~/projects'
