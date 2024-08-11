@@ -146,6 +146,7 @@ function icd() {
 alias dp='docker ps --all'
 alias dr='docker run --rm -it'
 alias de='docker exec -it'
+alias da='docker attach --detach-keys ctrl-d'
 alias dl='docker logs --timestamps --since 1h --follow'
 alias dcu='docker compose --file docker-compose.yml up'
 alias dcud='docker compose --file docker-compose.yml up -d'
