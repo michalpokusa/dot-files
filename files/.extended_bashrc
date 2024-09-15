@@ -195,6 +195,11 @@ vim() {
 # Preprent with date and time
 export PS1="[\[\033[38;5;239m\]\$(date +%Y-%m-%d\\ %H:%M:%S)\[\033[0m\]] $PS1"
 
+
+sv() {
+    source .venv/bin/activate
+}
+
 recreate-pip-venv() {
     # Remove existing .venv if exists
     if [[ -d ".venv" ]]; then
