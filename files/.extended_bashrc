@@ -32,8 +32,8 @@ alias .....='cd ../../../..'
 # Interactive cd command
 function icd() {
 
-    # Set the trap for Ctrl+C to return from the function
-    trap 'return' SIGINT
+    # Set the trap for Ctrl+C to clear terminal and return from the function
+    trap 'clear && return' SIGINT
 
     current_index=1
     search_term=""
