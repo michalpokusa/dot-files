@@ -200,17 +200,26 @@ sv() {
     source .venv/bin/activate
 }
 
-recreate-pip-venv() {
-    # Remove existing .venv if exists
-    if [[ -d ".venv" ]]; then
-    printf "Removing existing .venv\n"
-        rm -rf .venv
+recreate-python-venv() {
+    # Set path for venv
+    if [[ -n "$1" ]]; then
+        venv_path=$1
+    else
+        venv_path=".venv"
     fi
 
-    # Create new .venv
-    printf "Creating new .venv\n"
-    python3 -m venv .venv
-    source .venv/bin/activate
+    # Remove existing venv if exists
+    if [[ -d "$venv_path" ]]; then
+    printf "Removing existing $venv_path\n"
+        rm -rf $venv_path
+    fi
+
+    # Create new venv
+    printf "Creating new $venv_path\n"
+    python3 -m venv $venv_path
+
+    # Activate venv
+    source $venv_path/bin/activate
 
     # Install packages from requirements.txt
     if [[ -f "requirements.txt" ]]; then
