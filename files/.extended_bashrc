@@ -197,7 +197,14 @@ export PS1="[\[\033[38;5;239m\]\$(date +%Y-%m-%d\\ %H:%M:%S)\[\033[0m\]] $PS1"
 
 
 sv() {
-    source .venv/bin/activate
+    # Set path for venv
+    if [[ -n "$1" ]]; then
+        venv_path=$1
+    else
+        venv_path=".venv"
+    fi
+
+    source $venv_path/bin/activate
 }
 
 recreate-python-venv() {
