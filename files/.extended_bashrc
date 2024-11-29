@@ -156,6 +156,15 @@ alias dcp='docker compose --file docker-compose.yml pull'
 alias dcl='docker compose --file docker-compose.yml logs'
 alias dsp='docker system prune --all --force --volumes'
 
+# Git aliases
+alias gsl="git stash list"
+alias gsa="git stash --all -m"
+alias gss="git stash --staged -m"
+alias gsu="git stash --include-untracked -m"
+alias gsap="git stash apply"
+alias gsp="git stash pop"
+alias gsd="git stash drop"
+
 # Convinience aliases
 alias public-ip='curl https://ifconfig.me/ip; echo'
 alias ports='netstat -tulanp'
