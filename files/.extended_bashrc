@@ -267,4 +267,6 @@ update-dot-files() {
     curl --silent https://raw.githubusercontent.com/michalpokusa/dot-files/main/update-or-setup-dot-files.sh | bash
 }
 
+alias udf=update-dot-files
+
 export TERM=xterm-256color
