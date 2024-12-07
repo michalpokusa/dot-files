@@ -1,15 +1,19 @@
 # Sudo preservs environment variables
-alias sudo='sudo -E'
+sudo () {
+    command sudo --preserve-env "$@"
+}
 
 # Fixes for default commands behavior
-alias mkdir='mkdir --parents'
+mkdir() {
+    mkdir --parents $@
+}
 
 # Create directory and change to it immediately
 mkcd() {
   mkdir --parents "$@" && cd "$_";
 }
 
-# Aliases for creating links
+# Shortcuts for creating links
 hard-link() {
     mkdir --parents $(dirname $2)
     ln --verbose $1 $2
@@ -20,17 +24,22 @@ soft-link() {
     ln --symbolic --verbose --relative $1 $2
 }
 
-# Change directory aliases
-alias home='cd ~'
-alias projects='cd ~/projects'
-alias cd..='cd ..'
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
+# Changing directory
+home() {
+    cd ~
+}
+projects() {
+    cd ~/projects
+}
+.() {
+    pwd
+}
+..() {
+    cd ..
+}
 
 # Interactive cd command
-function icd() {
+icd() {
 
     # Set the trap for Ctrl+C to clear terminal and return from the function
     trap 'clear && return' SIGINT
@@ -142,35 +151,93 @@ function icd() {
 }
 
 
-# Docker aliases
-alias dp='docker ps --all'
-alias dr='docker run --rm -it'
-alias de='docker exec -it'
-alias da='docker attach --detach-keys ctrl-d'
-alias dl='docker logs --timestamps --since 1h --follow'
-alias dcu='docker compose --file docker-compose.yml up'
-alias dcud='docker compose --file docker-compose.yml up -d'
-alias dcd='docker compose --file docker-compose.yml down'
-alias dcdu='dcd && dcu'
-alias dcdud='dcd && dcud'
-alias dcr='docker compose --file docker-compose.yml restart'
-alias dcp='docker compose --file docker-compose.yml pull'
-alias dcl='docker compose --file docker-compose.yml logs'
-alias dsp='docker system prune --all --force --volumes'
+# Docker shortcuts
+dp() {
+    docker ps --all
+}
+dr() {
+    docker run --rm --interactive --tty $@
+}
+de() {
+    docker exec --interactive --tty $@
+}
+da() {
+    docker attach --detach-keys ctrl-d $@
+}
+dl() {
+    docker logs --timestamps --since 1h --follow $@
+}
+dsp() {
+    docker system prune --all --force --volumes $@
+}
 
-# Git aliases
-alias gsl="git stash list"
-alias gsa="git stash --all -m"
-alias gss="git stash --staged -m"
-alias gsu="git stash --include-untracked -m"
-alias gsap="git stash apply"
-alias gsp="git stash pop"
-alias gsd="git stash drop"
+# Docker compose shortcuts
+dcu() {
+    docker compose --file docker-compose.yml up $@
+}
+dcud() {
+    docker compose --file docker-compose.yml up --detach $@
+}
+dcd() {
+    docker compose --file docker-compose.yml down $@
+}
+dcdu() {
+    dcd && dcu $@
+}
+dcdud() {
+    dcd && dcud $@
+}
+dcr() {
+    docker compose --file docker-compose.yml restart $@
+}
+dcp() {
+    docker compose --file docker-compose.yml pull $@
+}
+dcl() {
+    docker compose --file docker-compose.yml logs $@
+}
 
-# Convinience aliases
-alias public-ip='curl https://ifconfig.me/ip; echo'
-alias ports='netstat -tulanp'
-alias total-size='du --human-readable --summarize --total'
+
+# Git shortcuts
+graph() {
+    git log --graph --branches --date=relative --full-history --all --color --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' | less -R
+}
+
+# Git stash shortcuts
+gsl() {
+    git stash list $@
+}
+gsa() {
+    git stash --all --message $@
+}
+gss() {
+    git stash --staged --message $@
+}
+gsu() {
+    git stash --include-untracked --message $@
+}
+gsap() {
+    git stash apply $@
+}
+gsp() {
+    git stash pop $@
+}
+gsd() {
+    git stash drop $@
+}
+
+# Convinience shortcuts
+public-ip() {
+    curl https://ifconfig.me/ip; echo
+}
+
+ports() {
+    netstat --tcp --udp --listening --all --numeric-hosts --numeric-ports --extend --program --timers
+}
+
+total-size() {
+    du --human-readable --summarize --total $@
+}
 
 # Allow executing scripts from home and current directory
 export PATH=$PATH:~:.
@@ -266,7 +333,8 @@ test-terminal-8-bit-colors() {
 update-dot-files() {
     curl --silent https://raw.githubusercontent.com/michalpokusa/dot-files/main/update-or-setup-dot-files.sh | bash
 }
-
-alias udf=update-dot-files
+udf() {
+    update-dot-files
+}
 
 export TERM=xterm-256color
