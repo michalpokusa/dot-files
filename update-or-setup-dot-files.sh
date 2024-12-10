@@ -1,9 +1,10 @@
 REPOSITORY_URL="https://raw.githubusercontent.com/michalpokusa/dot-files/main"
 
 FILES=(
+    ".bash_functions"
+    ".extended_bashrc"
     ".tmux.conf"
     ".vimrc"
-    ".extended_bashrc"
 )
 
 for FILE in "${FILES[@]}"; do
