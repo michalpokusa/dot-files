@@ -1,41 +1,46 @@
-# Sudo preservs environment variables
-sudo() {
+# Sudo preserves environment variables
+function sudo() {
     command sudo --preserve-env "$@"
 }
 
-# Fixes for default commands behavior
-mkdir() {
-    mkdir --parents $@
+# Create all intermediate directories if they don't exist
+function mkdir() {
+    command mkdir --parents $@
 }
 
 # Create directory and change to it immediately
-mkcd() {
-  mkdir --parents "$@" && cd "$_";
+function mkcd() {
+  command mkdir --parents "$@" && cd "$_";
 }
 
 # Shortcuts for creating links
-hard-link() {
-    mkdir --parents $(dirname $2)
-    ln --verbose $1 $2
+function hard-link() {
+    command mkdir --parents $(dirname $2)
+    command ln --verbose $1 $2
 }
 
-soft-link() {
-    mkdir --parents $(dirname $2)
-    ln --symbolic --verbose --relative $1 $2
+function symbolic-link() {
+    command mkdir --parents $(dirname $2)
+    command ln --symbolic --verbose --relative $1 $2
 }
 
 # Changing directory
-home() {
-    cd ~
+function home() {
+    command cd ~
 }
-projects() {
-    cd ~/projects
+function .() {
+    command pwd
 }
-.() {
-    pwd
-}
-..() {
-    cd ..
+function ..() {
+    if [[ -n "$1" ]]; then
+        nr_of_levels=$1
+    else
+        nr_of_levels=1
+    fi
+
+    for ((level = 0 ; level < nr_of_levels ; level++)); do
+        command cd ..
+    done
 }
 
 # Interactive cd command
@@ -151,85 +156,86 @@ icd() {
 }
 
 # Docker shortcuts
-dp() {
-    docker ps --all
+function dp() {
+    command docker ps --all
 }
-dr() {
-    docker run --rm --interactive --tty $@
+function dr() {
+    command docker run --rm --interactive --tty $@
 }
-de() {
-    docker exec --interactive --tty $@
+function de() {
+    command docker exec --interactive --tty $@
 }
-da() {
-    docker attach --detach-keys ctrl-d $@
+function da() {
+    command docker attach --detach-keys ctrl-d $@
 }
-dl() {
-    docker logs --timestamps --since 1h --follow $@
+function dl() {
+    command docker logs --timestamps --since 1h --follow $@
 }
-dsp() {
-    docker system prune --all --force --volumes $@
+function dsp() {
+    command docker system prune --all --force --volumes $@
 }
 
 # Docker compose shortcuts
-dcu() {
-    docker compose --file docker-compose.yml up $@
+function dcu() {
+    command docker compose --file docker-compose.yml up $@
 }
-dcud() {
-    docker compose --file docker-compose.yml up --detach $@
+function dcud() {
+    command docker compose --file docker-compose.yml up --detach $@
 }
-dcd() {
-    docker compose --file docker-compose.yml down $@
+function dcd() {
+    command docker compose --file docker-compose.yml down $@
 }
-dcdu() {
+function dcdu() {
     dcd && dcu $@
 }
-dcdud() {
+function dcdud() {
     dcd && dcud $@
 }
-dcr() {
-    docker compose --file docker-compose.yml restart $@
+function dcr() {
+    command docker compose --file docker-compose.yml restart $@
 }
-dcp() {
-    docker compose --file docker-compose.yml pull $@
+function dcp() {
+    command docker compose --file docker-compose.yml pull $@
 }
-dcl() {
-    docker compose --file docker-compose.yml logs $@
+function dcl() {
+    command docker compose --file docker-compose.yml logs $@
 }
 
 # Git stash shortcuts
-gsl() {
-    git stash list $@
+function gsl() {
+    command git stash list $@
 }
-gsa() {
-    git stash --all --message $@
+function gsa() {
+    command git stash --all --message $@
 }
-gss() {
-    git stash --staged --message $@
+function gss() {
+    command git stash --staged --message $@
 }
-gsu() {
-    git stash --include-untracked --message $@
+function gsu() {
+    command git stash --include-untracked --message $@
 }
-gsap() {
-    git stash apply $@
+function gsap() {
+    command git stash apply $@
 }
-gsp() {
-    git stash pop $@
+function gsp() {
+    command git stash pop $@
 }
-gsd() {
-    git stash drop $@
+function gsd() {
+    command git stash drop $@
 }
 
 # Convinience shortcuts
-public-ip() {
-    curl https://ifconfig.me/ip; echo
+function public-ip() {
+    command curl https://ifconfig.me/ip
+    command echo
 }
 
-ports() {
-    netstat --tcp --udp --listening --all --numeric-hosts --numeric-ports --extend --program --timers
+function ports() {
+    command netstat --tcp --udp --listening --all --numeric-hosts --numeric-ports --extend --program --timers
 }
 
-total-size() {
-    du --human-readable --summarize --total $@
+function total-size() {
+    command du --human-readable --summarize --total $@
 }
 
 vim() {
@@ -257,29 +263,29 @@ vim() {
     command vim $@
 }
 
-sv() {
+function sv() {
     # Set path for venv
     if [[ -n "$1" ]]; then
-        venv_path=$1
+        local venv_path=$1
     else
-        venv_path=".venv"
+        local venv_path=".venv"
     fi
 
     source $venv_path/bin/activate
 }
 
-recreate-python-venv() {
+function recreate-python-venv() {
     # Set path for venv
     if [[ -n "$1" ]]; then
-        venv_path=$1
+        local venv_path=$1
     else
-        venv_path=".venv"
+        local venv_path=".venv"
     fi
 
     # Remove existing venv if exists
     if [[ -d "$venv_path" ]]; then
     printf "Removing existing $venv_path\n"
-        rm -rf $venv_path
+        command rm -rf $venv_path
     fi
 
     # Create new venv
@@ -313,9 +319,10 @@ test-terminal-8-bit-colors() {
     done
 }
 
-update-dot-files() {
+# Updating dot files from the repository
+function update-dot-files() {
     curl --silent https://raw.githubusercontent.com/michalpokusa/dot-files/main/update-or-setup-dot-files.sh | bash
 }
-udf() {
+function udf() {
     update-dot-files
 }
