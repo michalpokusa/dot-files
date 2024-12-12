@@ -3,6 +3,11 @@ function sudo() {
     command sudo --preserve-env "$@"
 }
 
+# Use long iso date format for ls
+function ls() {
+    command ls --time-style=long-iso "$@"
+}
+
 # Create all intermediate directories if they don't exist
 function mkdir() {
     command mkdir --parents "$@"
@@ -237,6 +242,106 @@ function ports() {
 
 function total-size() {
     command du --human-readable --summarize --total "$@"
+}
+
+function how-long() {
+    local start_time=$(command date +%s%N)
+
+    # Execute the command
+    "$@"
+
+    local end_time=$(command date +%s%N)
+
+    local duration_ns=$((end_time - start_time))
+
+    local hours=$((duration_ns / 3600000000000))
+    local minutes=$((duration_ns % 3600000000000 / 60000000000))
+    local seconds=$((duration_ns % 3600000000000 % 60000000000 / 1000000000))
+    local milliseconds=$((duration_ns % 3600000000000 % 60000000000 % 1000000000 / 1000000))
+
+    function wordy_duration() {
+        local hours=$1
+        local minutes=$2
+        local seconds=$3
+        local milliseconds=$4
+        local output=""
+
+        if [ $hours -gt 0 ]; then
+            if [ $hours -eq 1 ]; then
+                output="$hours hour"
+            else
+                output="$hours hours"
+            fi
+        fi
+
+        if [ $minutes -gt 0 ]; then
+            if [[ -n "$output" ]]; then
+                output="$output "
+            fi
+
+            if [ $minutes -eq 1 ]; then
+                output="$output$minutes minute"
+            else
+                output="$output$minutes minutes"
+            fi
+        fi
+
+        if [ $seconds -gt 0 ]; then
+            if [[ -n $output ]]; then
+                output="$output "
+            fi
+
+            if [ $seconds -eq 1 ]; then
+                output="$output$seconds second"
+            else
+                output="$output$seconds seconds"
+            fi
+        fi
+
+        if [ $milliseconds -gt 0 ]; then
+            if [[ -n $output ]]; then
+                output="$output "
+            fi
+
+            if [ $milliseconds -eq 1 ]; then
+                output="$output$milliseconds millisecond"
+            else
+                output="$output$milliseconds milliseconds"
+            fi
+        fi
+        printf "$output"
+    }
+
+    function pad-left-with-zero() {
+        local value=$1
+        local length=$2
+        local result=""
+
+        for ((i = 0 ; i < length ; i++)); do
+            result="${result}0"
+        done
+
+        result="${result}${value}"
+
+        printf ${result: -length}
+    }
+
+    function clock_duration() {
+        local hours=$1
+        local minutes=$2
+        local seconds=$3
+        local milliseconds=$4
+        local outpout=""
+
+        output+="$(pad-left-with-zero $hours 2):"
+        output+="$(pad-left-with-zero $minutes 2):"
+        output+="$(pad-left-with-zero $seconds 2)."
+        output+="$(pad-left-with-zero $milliseconds 3)"
+
+        printf "$output"
+    }
+
+    printf "\n$(clock_duration $hours $minutes $seconds $milliseconds) ($(wordy_duration $hours $minutes $seconds $milliseconds))\n"
 }
 
 vim() {
