@@ -5,7 +5,7 @@ function sudo() {
 
 # Create all intermediate directories if they don't exist
 function mkdir() {
-    command mkdir --parents $@
+    command mkdir --parents "$@"
 }
 
 # Create directory and change to it immediately
@@ -32,7 +32,8 @@ function .() {
     command pwd
 }
 function ..() {
-    if [[ -n "$1" ]]; then
+    # If first argument is a number, change directory by that many levels up
+    if [[ $1 =~ ^[0-9]+$ ]]; then
         nr_of_levels=$1
     else
         nr_of_levels=1
@@ -160,74 +161,74 @@ function dp() {
     command docker ps --all
 }
 function dr() {
-    command docker run --rm --interactive --tty $@
+    command docker run --rm --interactive --tty "$@"
 }
 function de() {
-    command docker exec --interactive --tty $@
+    command docker exec --interactive --tty "$@"
 }
 function da() {
-    command docker attach --detach-keys ctrl-d $@
+    command docker attach --detach-keys ctrl-d "$@"
 }
 function dl() {
-    command docker logs --timestamps --since 1h --follow $@
+    command docker logs --timestamps --since 1h --follow "$@"
 }
 function dsp() {
-    command docker system prune --all --force --volumes $@
+    command docker system prune --all --force --volumes "$@"
 }
 
 # Docker compose shortcuts
 function dcu() {
-    command docker compose --file docker-compose.yml up $@
+    command docker compose --file docker-compose.yml up "$@"
 }
 function dcud() {
-    command docker compose --file docker-compose.yml up --detach $@
+    command docker compose --file docker-compose.yml up --detach "$@"
 }
 function dcd() {
-    command docker compose --file docker-compose.yml down $@
+    command docker compose --file docker-compose.yml down "$@"
 }
 function dcdu() {
-    dcd && dcu $@
+    dcd && dcu "$@"
 }
 function dcdud() {
-    dcd && dcud $@
+    dcd && dcud "$@"
 }
 function dcr() {
-    command docker compose --file docker-compose.yml restart $@
+    command docker compose --file docker-compose.yml restart "$@"
 }
 function dcp() {
-    command docker compose --file docker-compose.yml pull $@
+    command docker compose --file docker-compose.yml pull "$@"
 }
 function dcl() {
-    command docker compose --file docker-compose.yml logs $@
+    command docker compose --file docker-compose.yml logs "$@"
 }
 
 # Git stash shortcuts
 function gsl() {
-    command git stash list $@
+    command git stash list "$@"
 }
 function gsa() {
-    command git stash --all --message $@
+    command git stash --all --message "$@"
 }
 function gss() {
-    command git stash --staged --message $@
+    command git stash --staged --message "$@"
 }
 function gsu() {
-    command git stash --include-untracked --message $@
+    command git stash --include-untracked --message "$@"
 }
 function gsap() {
-    command git stash apply $@
+    command git stash apply "$@"
 }
 function gsp() {
-    command git stash pop $@
+    command git stash pop "$@"
 }
 function gsd() {
-    command git stash drop $@
+    command git stash drop "$@"
 }
 
 # Convinience shortcuts
 function public-ip() {
     command curl https://ifconfig.me/ip
-    command echo
+    command printf "\n"
 }
 
 function ports() {
@@ -235,7 +236,7 @@ function ports() {
 }
 
 function total-size() {
-    command du --human-readable --summarize --total $@
+    command du --human-readable --summarize --total "$@"
 }
 
 vim() {
