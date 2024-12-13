@@ -1,49 +1,53 @@
-REPOSITORY_URL="https://raw.githubusercontent.com/michalpokusa/dot-files/main"
 
-FILES=(
-    ".bash_functions"
-    ".extended_bashrc"
-    ".tmux.conf"
-    ".vimrc"
-)
+function update-or-setup-dot-files() {
+    local repository_url="https://raw.githubusercontent.com/michalpokusa/dot-files/main"
 
-for FILE in "${FILES[@]}"; do
-    FULL_FILE_PATH="$HOME/$FILE"
+    local files=(
+        ".bash_functions"
+        ".extended_bashrc"
+        ".tmux.conf"
+        ".vimrc"
+    )
 
-    # File exists, update it
-    if [[ -f "$FULL_FILE_PATH" ]]; then
+    for file in "${files[@]}"; do
+        local absolute_file_path="$HOME/$file"
 
-        # Compare checksums
-        BEFORE_MD5=$(cat $HOME/$FILE | md5sum)
-        curl --silent "$REPOSITORY_URL/files/$FILE" > $HOME/$FILE
-        AFTER_MD5=$(cat $HOME/$FILE | md5sum)
+        # File exists, update it
+        if [[ -f "$absolute_file_path" ]]; then
 
-        if [[ "$BEFORE_MD5" != "$AFTER_MD5" ]]; then
-            echo -e "$FILE has been updated"
+            # Compare checksums
+            local before_md5=$(cat $HOME/$file | md5sum)
+            curl --silent "$repository_url/files/$file" > $HOME/$file
+            local after_md5=$(cat $HOME/$file | md5sum)
+
+            if [[ "$before_md5" != "$after_md5" ]]; then
+                printf "$file has been updated\n"
+            else
+                printf "$file is up to date\n"
+            fi
+
+        # File does not exist, download it
         else
-            echo -e "$FILE is up to date"
+            curl --silent "$repository_url/files/$file" > $HOME/$file
+            printf "Downloaded $file\n"
         fi
+    done
 
-    # File does not exist, download it
+
+    # Sourcing .extended_bashrc in .bashrc
+    local bashrc_path="$HOME/.bashrc"
+    local extended_bashrc_path="$HOME/.extended_bashrc"
+    local line_to_check="source $extended_bashrc_path"
+
+    # Line for sourcing .extended_bashrc does not exist in .bashrc
+    if ! grep --fixed-strings --line-regexp --silent "$line_to_check" "$bashrc_path"; then
+        printf "$line_to_check\n" >> "$bashrc_path"
+        printf "Added line to source .extended_bashrc to .bashrc\n"
+
+    # Line for sourcing .extended_bashrc already exists in .bashrc
     else
-        curl --silent "$REPOSITORY_URL/files/$FILE" > $HOME/$FILE
-        echo -e "Downloaded $FILE"
+        printf "Line to source .extended_bashrc already exists in .bashrc\n"
     fi
-done
+}
 
-
-# Sourcing .extended_bashrc by .bashrc
-BASHRC_PATH="$HOME/.bashrc"
-EXTENDED_BASHRC_PATH="$HOME/.extended_bashrc"
-
-LINE_TO_CHECK="source $EXTENDED_BASHRC_PATH"
-
-# Line for sourcing .extended_bashrc does not exist in .bashrc
-if ! grep --fixed-strings --line-regexp --silent "$LINE_TO_CHECK" "$BASHRC_PATH"; then
-    echo "$LINE_TO_CHECK" >> "$BASHRC_PATH"
-    echo "Added line to source .extended_bashrc to .bashrc"
-
-# Line for sourcing .extended_bashrc already exists in .bashrc
-else
-    echo "Line to source .extended_bashrc already exists in .bashrc"
-fi
+update-or-setup-dot-files
