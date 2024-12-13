@@ -296,23 +296,6 @@ function recreate-python-venv() {
     fi
 }
 
-
-test-terminal-8-bit-colors() {
-    # Read text to use as a placeholder
-    read -p "Enter text to use as a placeholder: " placeholderText
-
-    # Foreground colors
-    for colorIndex in {0..255} ; do
-        printf "\x1b[0m${colorIndex}: "
-
-        # Print placeholder using foreground color
-        printf "\x1b[38;5;${colorIndex}m${placeholderText}\x1b[0m"
-
-        # Print a block of background color
-        printf "\t\t\x1b[48;5;${colorIndex}m                  \x1b[0m\n"
-    done
-}
-
 # Updating dot files from the repository
 function update-dot-files() {
     curl --silent https://raw.githubusercontent.com/michalpokusa/dot-files/main/update-or-setup-dot-files.sh | bash
