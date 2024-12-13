@@ -232,31 +232,6 @@ function how-long() {
     printf "\n$(clock_duration $hours $minutes $seconds $milliseconds) ($(wordy_duration $hours $minutes $seconds $milliseconds))\n"
 }
 
-vim() {
-    # Get last argument and save it as file path
-    for ARG in $@; do :; done
-    FILE_PATH=$ARG
-
-    ABSOLUTE_FILE_PARENT_DIRECTORY=$(realpath $(dirname $FILE_PATH))
-
-    # If file name was provided, try creating its parent directory if it doesn't exist
-    if [[ -n "$FILE_PATH" && ! -d "$ABSOLUTE_FILE_PARENT_DIRECTORY" ]]; then
-
-        UNDERLINE="\033[4m"
-        RESET="\033[0m"
-
-        # Ask whether to create parent directory
-        read -n1 -p "$(echo -e "Create parent directory $UNDERLINE$ABSOLUTE_FILE_PARENT_DIRECTORY$RESET? [y/N] ")" SHOULD_CREATE_PARENT_DIRECTORY
-        if [[ "$SHOULD_CREATE_PARENT_DIRECTORY" =~ y|Y ]]; then
-            mkdir --parents $ABSOLUTE_FILE_PARENT_DIRECTORY
-        fi
-        echo
-    fi
-
-    # Open file in vim
-    command vim $@
-}
-
 function sv() {
     # Set path for venv
     if [[ -n "$1" ]]; then
