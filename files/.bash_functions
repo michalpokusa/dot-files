@@ -20,13 +20,13 @@ function mkcd() {
 
 # Shortcuts for creating links
 function hard-link() {
-    command mkdir --parents $(dirname $2)
-    command ln --verbose $1 $2
+    command mkdir --parents $(dirname "$2")
+    command ln --verbose "$1" "$2"
 }
 
 function symbolic-link() {
-    command mkdir --parents $(dirname $2)
-    command ln --symbolic --verbose --relative $1 $2
+    command mkdir --parents $(dirname "$2")
+    command ln --symbolic --verbose --relative "$1" "$2"
 }
 
 # Changing directory
@@ -235,7 +235,7 @@ function how-long() {
 function sv() {
     # Set path for venv
     if [[ -n "$1" ]]; then
-        local venv_path=$1
+        local venv_path="$1"
     else
         local venv_path=".venv"
     fi
@@ -246,7 +246,7 @@ function sv() {
 function recreate-python-venv() {
     # Set path for venv
     if [[ -n "$1" ]]; then
-        local venv_path=$1
+        local venv_path="$1"
     else
         local venv_path=".venv"
     fi
