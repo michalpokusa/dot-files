@@ -270,6 +270,9 @@ function recreate-python-venv() {
         pip install -r requirements.txt
     fi
 }
+function rpv() {
+    recreate-python-venv "$@"
+}
 
 # Updating dot files from the repository
 function update-dot-files() {
