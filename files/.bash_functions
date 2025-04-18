@@ -49,6 +49,16 @@ function ..() {
     done
 }
 
+function disable-history() {
+    export ORIGINAL_HISTIGNORE="$HISTIGNORE"
+    export HISTIGNORE="*"
+}
+function enable-history() {
+    export HISTIGNORE="$ORIGINAL_HISTIGNORE"
+    unset ORIGINAL_HISTIGNORE
+    history -d -1
+}
+
 # Docker shortcuts
 function dp() {
     command docker ps --all
