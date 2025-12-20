@@ -10,5 +10,9 @@ export PS1="[\[\033[38;5;239m\]\$(date +%Y-%m-%d\\ %H:%M:%S)\[\033[0m\]] $PS1"
 # Fix for tmux
 export TERM="xterm-256color"
 
-# Load custom functions in interactive mode
+# Load custom functions
 source "$HOME/.bash_functions"
+
+# Fix for Tab completion for python
+complete -f python
+complete -f python3
