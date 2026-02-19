@@ -23,7 +23,6 @@ function hard-link() {
     command mkdir --parents $(dirname "$2")
     command ln --verbose "$1" "$2"
 }
-
 function symbolic-link() {
     command mkdir --parents $(dirname "$2")
     command ln --symbolic --verbose --relative "$1" "$2"
@@ -70,24 +69,20 @@ function de() {
     command docker exec --interactive --tty "$@"
 }
 function da() {
-    command docker attach --detach-keys ctrl-d "$@"
-}
-function dl() {
-    command docker logs --timestamps --since 1h --follow "$@"
+    command docker attach --detach-keys "d,e,t,a,c,h" "$@"
 }
 function dsp() {
     command docker system prune --all --force --volumes "$@"
 }
 
-# Docker compose shortcuts
 function dcu() {
-    command docker compose --file docker-compose.yml up "$@"
+    command docker compose up "$@"
 }
 function dcud() {
-    command docker compose --file docker-compose.yml up --detach "$@"
+    command docker compose up --detach "$@"
 }
 function dcd() {
-    command docker compose --file docker-compose.yml down "$@"
+    command docker compose down "$@"
 }
 function dcdu() {
     dcd && dcu "$@"
@@ -96,13 +91,13 @@ function dcdud() {
     dcd && dcud "$@"
 }
 function dcr() {
-    command docker compose --file docker-compose.yml restart "$@"
+    command docker compose restart "$@"
 }
 function dcp() {
-    command docker compose --file docker-compose.yml pull "$@"
+    command docker compose pull "$@"
 }
 function dcl() {
-    command docker compose --file docker-compose.yml logs "$@"
+    command docker compose logs "$@"
 }
 
 # Git stash shortcuts
@@ -240,48 +235,6 @@ function how-long() {
     }
 
     printf "\n$(clock_duration $hours $minutes $seconds $milliseconds) ($(wordy_duration $hours $minutes $seconds $milliseconds))\n"
-}
-
-function sv() {
-    # Set path for venv
-    if [[ -n "$1" ]]; then
-        local venv_path="$1"
-    else
-        local venv_path=".venv"
-    fi
-
-    source $venv_path/bin/activate
-}
-
-function recreate-python-venv() {
-    # Set path for venv
-    if [[ -n "$1" ]]; then
-        local venv_path="$1"
-    else
-        local venv_path=".venv"
-    fi
-
-    # Remove existing venv if exists
-    if [[ -d "$venv_path" ]]; then
-    printf "Removing existing $venv_path\n"
-        command rm -rf $venv_path
-    fi
-
-    # Create new venv
-    printf "Creating new $venv_path\n"
-    python3 -m venv $venv_path
-
-    # Activate venv
-    source $venv_path/bin/activate
-
-    # Install packages from requirements.txt
-    if [[ -f "requirements.txt" ]]; then
-        printf "Installing packages from requirements.txt\n"
-        pip install -r requirements.txt
-    fi
-}
-function rpv() {
-    recreate-python-venv "$@"
 }
 
 # Updating dot files from the repository
