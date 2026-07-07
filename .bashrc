@@ -52,6 +52,8 @@ function cd() {
     builtin cd "$@" && command ls -l --all --time-style=long-iso --human-readable --color=auto
 }
 
+alias ...="cd ../.."
+
 alias ls="ls -l --all --time-style=long-iso --human-readable --color=auto"
 alias mkdir="mkdir --parents"
 
@@ -140,7 +142,7 @@ alias dcp='docker compose pull'
 alias dcl='docker compose logs'
 
 function gl() {
-    command git log \
+    GIT_PAGER='less -R' command git log \
         --graph \
         --all \
         --full-history \
