@@ -170,7 +170,7 @@ function gwmb() {
     fi
 
     git worktree move . "$new_worktree_path"
-    cd "$new_worktree_path"
+    builtin cd "$new_worktree_path"
 }
 
 alias gsl='git stash list'
@@ -194,9 +194,8 @@ function sv() {
 
 function update-dot-files() {
     local repository_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
-    echo $repository_path
 
-    cd "$repository_path" || return 1
+    builtin cd "$repository_path" || return 1
 
     git pull --stat --progress --verbose origin main
 }
