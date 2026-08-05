@@ -127,6 +127,17 @@ function restore-backup() {
     command tar --verbose --extract --gzip --preserve-permissions --file "$@"
 }
 
+function ask-cd() {
+    local target_directory="$1"
+
+    read -n 1 -p "Change directory to '$target_directory'? [y/N]: " should_cd
+    printf "\n"
+
+    if [[ "$should_cd" =~ ^[Yy]$ ]]; then
+        builtin cd "$target_directory"
+    fi
+}
+
 alias dp='docker ps --all'
 alias dr='docker run --rm --interactive --tty'
 alias de='docker exec --interactive --tty'
@@ -152,11 +163,26 @@ function gl() {
 }
 
 alias gwl='git worktree list'
-alias gwa='git worktree add'
-alias gwr='git worktree remove'
-alias gwm='git worktree move'
 
-function gwmb() {
+function gwa() {
+    local worktree_path="$1"
+
+    git worktree add "$@"
+
+    ask-cd "$worktree_path"
+}
+
+alias gwr='git worktree remove'
+
+function gwm() {
+    local worktree_path="$2"
+
+    git worktree move "$@"
+
+    ask-cd "$worktree_path"
+}
+
+function git-worktree-move-to-branch() {
     local current_worktree_path=$(pwd)
     local new_worktree_name=$(git branch --show-current | sed 's/\//-/g')
     local worktrees_folder=$(dirname $(pwd))
@@ -170,8 +196,28 @@ function gwmb() {
     fi
 
     git worktree move . "$new_worktree_path"
-    builtin cd "$new_worktree_path"
+
+    ask-cd "$new_worktree_path"
 }
+alias gwmb='git-worktree-move-to-branch'
+
+function git-delete-unchecked-branches() {
+    local unchecked_branches=()
+
+    while IFS= read -r branch; do
+        unchecked_branches+=("$(echo "$branch" | tr -d '[:space:]')")
+    done < <(git branch | grep -v '[+*]')
+
+    for branch in "${unchecked_branches[@]}"; do
+        read -n 1 -p "Delete branch '$branch'? [y/N]: " should_delete_branch
+        printf "\n"
+
+        if [[ "$should_delete_branch" =~ ^[Yy]$ ]]; then
+            git branch --delete --force "$branch"
+        fi
+    done
+}
+alias gdub='git-delete-unchecked-branches'
 
 alias gsl='git stash list'
 alias gsa='git stash --all --message'
@@ -190,6 +236,22 @@ function sv() {
     local venv_path="${1:-.venv}"
 
     source $venv_path/bin/activate
+}
+
+function repeat() {
+    local interval="${1:-1}"
+    shift
+    local command="$*"
+
+    if [[ -z "$command" ]]; then
+        echo "Usage: repeat <interval> <command>"
+        return 1
+    fi
+
+    while true; do
+        eval "$command"
+        sleep "$interval"
+    done
 }
 
 function update-dot-files() {
