@@ -48,6 +48,13 @@ function load-dot-env() {
     done
 }
 
+# Load .env if exists in the current directory
+if [[ -f ".env" ]]; then
+    load-dot-env ".env"
+    printf "Loaded .env\n"
+fi
+
+
 function cd() {
     builtin cd "$@" && command ls -l --all --time-style=long-iso --human-readable --color=auto
 }
