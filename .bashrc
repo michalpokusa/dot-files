@@ -245,20 +245,25 @@ function sv() {
     source $venv_path/bin/activate
 }
 
-function repeat() {
-    local interval="${1:-1}"
-    shift
-    local command="$*"
+function edit-and-run() {
+    local file=$(mktemp) || return
 
-    if [[ -z "$command" ]]; then
-        echo "Usage: repeat <interval> <command>"
-        return 1
+    printf '%s\n' "$*" > "$file"
+
+    "${VISUAL:-${EDITOR:-vi}}" "$file"
+
+    local status=$?
+    if (( status == 0 )); then
+        bash "$file"
+        status=$?
     fi
 
-    while true; do
-        eval "$command"
-        sleep "$interval"
-    done
+    rm -f "$file"
+    return "$status"
+}
+
+function repeat() {
+    edit-and-run $'while true; do\n\ndone'
 }
 
 function update-dot-files() {
