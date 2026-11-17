@@ -62,8 +62,6 @@ function cd() {
     builtin cd "$@" && command ls -l --all --time-style=long-iso --human-readable --color=auto
 }
 
-alias ...="cd ../.."
-
 alias ls="ls -l --all --time-style=long-iso --human-readable --color=auto"
 alias mkdir="mkdir --parents"
 
