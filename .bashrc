@@ -257,7 +257,12 @@ function edit-and-run() {
 
     local status=$?
     if (( status == 0 )); then
-        bash "$file"
+        local command_text
+        command_text=$(< "$file")
+        if [[ -n "$command_text" ]]; then
+            builtin history -s -- "$command_text"
+        fi
+        builtin source "$file"
         status=$?
     fi
 
