@@ -122,6 +122,11 @@ set history=1000
     vnoremap <silent> <C-x> <C-C>:quit<CR>
     inoremap <silent> <C-x> <C-O>:quit<CR>
 
+    " Ctrl+c to cancel quit
+    nnoremap <silent> <C-c> :cquit<CR>
+    vnoremap <silent> <C-c> <Esc>:cquit<CR>
+    inoremap <silent> <C-c> <Esc>:cquit<CR>
+
     " Ctrl+l to clear highlights
     nnoremap <silent> <C-l> :nohlsearch<CR>
 
@@ -216,4 +221,3 @@ set history=1000
     endif
 
 " Theme
-
