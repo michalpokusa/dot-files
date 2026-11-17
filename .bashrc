@@ -228,9 +228,8 @@ alias gsl='git stash list'
 alias gsa='git stash --all --message'
 alias gss='git stash --staged --message'
 alias gsu='git stash --include-untracked --message'
-
-alias gsap='git stash apply'
-alias gsp='git stash pop'
+alias gsap='git stash apply --index'
+alias gsp='git stash pop --index'
 alias gsd='git stash drop'
 
 alias public-ip="curl https://checkip.amazonaws.com"
