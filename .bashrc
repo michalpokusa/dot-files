@@ -10,6 +10,9 @@ export PS1="[\[\033[38;5;239m\]\$(date +%Y-%m-%d\\ %H:%M:%S)\[\033[0m\]] $PS1"
 # Fix for tmux
 export TERM="xterm-256color"
 
+alias h="history"
+alias hl="history | less +G"
+
 export HISTFILESIZE=10000           # Number of history commands that will be stored on disk (default: 500).
 shopt -s histappend                 # Append to history instead of overwriting
 export HISTCONTROL="ignoreboth"     # Ignore duplicates and commands starting with space
