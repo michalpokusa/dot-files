@@ -91,41 +91,15 @@ function symbolic-link() {
 }
 
 function backup() {
-    local input_paths=()
-    local to=""
-
-    while [[ $# -gt 0 ]]; do
-      case "$1" in
-        -to)
-            to="${2%/}"
-            shift 2
-        ;;
-        -*)
-            echo "Unknown option: $1"
-            return 1
-        ;;
-        *)
-            input_paths+=("$1")
-            shift
-        ;;
-      esac
-    done
+    local input_paths=("$@")
 
     if [[ ${#input_paths[@]} -eq 0 ]]; then
         echo "No input paths provided"
         return 1
     fi
 
-    local backup_path_suffix="backup-$(date +%Y-%m-%d_%H-%M-%S).tar.gz"
-    local backup_path
-
-    if [[ -n "$to" ]]; then
-        backup_path="$to.$backup_path_suffix"
-    elif [[ ${#input_paths[@]} -eq 1 ]]; then
-        backup_path="$(basename "${input_paths[0]}").$backup_path_suffix"
-    else
-        backup_path="$backup_path_suffix"
-    fi
+    local default_backup_path="backup-$(date +%Y-%m-%d_%H-%M-%S).tar.gz"
+    read -e -i "$default_backup_path" -p "Save as: " backup_path
 
     command mkdir --parents "$(dirname "$backup_path")"
     command tar --verbose --create --gzip --preserve-permissions --file "$backup_path" "${input_paths[@]}"
@@ -133,8 +107,31 @@ function backup() {
     printf "$backup_path\n"
 }
 
+function check-backup() {
+    local backup_path="$1"
+
+    if [[ -z "$backup_path" ]]; then
+        echo "No backup path provided"
+        return 1
+    fi
+
+    (
+        set -o pipefail
+        command tar --list --gzip --file "$backup_path" | command tree --fromfile -a . | less
+    )
+}
+
 function restore-backup() {
-    command tar --verbose --extract --gzip --preserve-permissions --file "$@"
+    local backup_path="$1"
+
+    if [[ -z "$backup_path" ]]; then
+        echo "No backup path provided"
+        return 1
+    fi
+
+    read -e -i "." -p "Restore to: " restore_path
+    command mkdir --parents "$restore_path"
+    command tar --verbose --extract --gzip --preserve-permissions --directory "$restore_path" --file "$@"
 }
 
 function ask-cd() {
