@@ -90,6 +90,12 @@ function symbolic-link() {
 
 function backup() {
     local input_paths=("$@")
+    local piped_input=false
+
+    if (( $# == 0 )) && [[ ! -t 0 ]]; then
+        mapfile -t input_paths
+        piped_input=true
+    fi
 
     if [[ ${#input_paths[@]} -eq 0 ]]; then
         echo "No input paths provided"
@@ -97,10 +103,15 @@ function backup() {
     fi
 
     local default_backup_path="backup-$(date +%Y-%m-%d_%H-%M-%S).tar.gz"
-    read -e -i "$default_backup_path" -p "Save as: " backup_path
+    local backup_path
+    if [[ "$piped_input" == true ]]; then
+        read -e -i "$default_backup_path" -p "Save as: " backup_path </dev/tty || return
+    else
+        read -e -i "$default_backup_path" -p "Save as: " backup_path || return
+    fi
 
-    command mkdir --parents "$(dirname "$backup_path")"
-    command tar --verbose --create --gzip --preserve-permissions --file "$backup_path" "${input_paths[@]}"
+    command mkdir --parents "$(dirname "$backup_path")" || return
+    command tar --verbose --create --gzip --preserve-permissions --file "$backup_path" -- "${input_paths[@]}" || return
 
     printf "$backup_path\n"
 }
@@ -267,6 +278,11 @@ function edit-and-run() {
 function repeat() {
     edit-and-run $'while true; do\n\ndone'
 }
+
+function find-and-run-on-files() {
+    edit-and-run $'for file in $(find . ); do\n\ndone'
+}
+
 
 function update-dot-files() {
     local repository_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
