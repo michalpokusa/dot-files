@@ -290,4 +290,6 @@ function update-dot-files() {
     builtin cd "$repository_path" || return 1
 
     git pull --stat --progress --verbose origin main
+
+    builtin cd - > /dev/null || return 1
 }
