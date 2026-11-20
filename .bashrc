@@ -126,7 +126,10 @@ function check-backup() {
 
     (
         set -o pipefail
-        command tar --list --gzip --file "$backup_path" | command tree --fromfile -a . | less
+        command tar --list --gzip --file "$backup_path" |
+            command sed -E 's|^(\./)+||; /^\.?$/d' |
+            command tree --fromfile -a . |
+            less
     )
 }
 
